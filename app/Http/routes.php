@@ -24,6 +24,25 @@ Route::get('enviar', ['as' => 'enviar', function(){
 	return "Se envio el email";
 }]);
 
+Route::get('sends', function(){
+	\Mail::send('emails.email', [], function($message){
+		$message->from('admin@compuzoft.com', 'Felix Castro');
+		$message->to('user@example.com')->subject('Bienvenido');
+	});
+	return "Se envio el email correctamente";
+});
+
+Route::get('sendall', function(){
+	$users = \App\User::all();
+	foreach ($users as $user) {
+		\Mail::send('emails.email', [], function($message) use ($user){
+			$message->from('admin@compuzoft.com', 'Felix Castro');
+			$message->to($user->email, $user->name)->subject('Bienvenido ' . $user->name);
+		});
+		return "Se envio el email correctamente";
+	}
+});
+
 Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',
